@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import type TipoPet from "../tipos/TipoPet";
+import type TipoPet from "../tipos/tiposPet";
 import EnumEspecie from "../enum/EnumEspecie";
 import EnumPorte from "../enum/EnumPorte";
 import PetRepository from "../repositories/PetRepository";
