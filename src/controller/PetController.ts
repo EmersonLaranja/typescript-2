@@ -6,7 +6,7 @@ import PetEntity from "../entities/PetEntity";
 import { TipoRequestBodyPet, TipoRequestParamsPet, TipoResponseBodyPet } from "../tipos/tiposPet";
 
 export default class PetController {
-  constructor(private repository: PetRepository) {}
+  constructor(private repository: PetRepository) { }
   async criaPet(req: Request<TipoRequestParamsPet, {}, TipoRequestBodyPet>,
     res: Response<TipoResponseBodyPet>) {
     const { adotado, especie, dataDeNascimento, nome, porte } = <PetEntity>(
@@ -14,11 +14,11 @@ export default class PetController {
     );
 
     if (!Object.values(EnumEspecie).includes(especie)) {
-      return res.status(400).json({ error: "Especie inválida" });
+      return res.status(400).json({ erros: "Especie inválida" });
     }
 
     if (porte && !(porte in EnumPorte)) {
-      return res.status(400).json({ error: "Porte inválido" });
+      return res.status(400).json({ erros: "Porte inválido" });
     }
     const novoPet = new PetEntity(
       nome,
@@ -29,14 +29,14 @@ export default class PetController {
     );
 
     await this.repository.criaPet(novoPet);
-    return res.status(201).json({data:{id:novoPet.id,especie,nome,porte}});
+    return res.status(201).json({ dados: { id: novoPet.id, especie, nome, porte } });
   }
 
   async listaPet(req: Request<TipoRequestParamsPet, {}, TipoRequestBodyPet>,
     res: Response<TipoResponseBodyPet>) {
     const listaDePets = await this.repository.listaPet();
 
-    return res.status(200).json({data:listaDePets});
+    return res.status(200).json({ dados: listaDePets });
   }
 
   async atualizaPet(req: Request<TipoRequestParamsPet, {}, TipoRequestBodyPet>,
@@ -48,7 +48,7 @@ export default class PetController {
     );
 
     if (!success) {
-      return res.status(404).json({ error:{mensagem:message} });
+      return res.status(404).json({ erros: { mensagem: message } });
     }
     return res.sendStatus(204);
   }
@@ -60,7 +60,7 @@ export default class PetController {
     const { success, message } = await this.repository.deletaPet(Number(id));
 
     if (!success) {
-      return res.status(404).json({ error:{mensagem:message} });
+      return res.status(404).json({ erros: { mensagem: message } });
     }
     return res.sendStatus(204);
   }

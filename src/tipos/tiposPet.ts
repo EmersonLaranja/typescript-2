@@ -3,11 +3,11 @@ import PetEntity from "../entities/PetEntity";
 type TipoRequestBodyPet = Omit<PetEntity, "id">;
 
 type TipoResponseBodyPet = {
-  data?:
-    | Pick<PetEntity, "id" | "nome" | "especie"| "porte">
-    | Pick<PetEntity, "id" | "nome" | "especie"| "porte">[];
+  dados?:
+  | Pick<PetEntity, "id" | "nome" | "especie" | "porte">
+  | Pick<PetEntity, "id" | "nome" | "especie" | "porte">[];
 
-  error?: unknown;
+  erros?: unknown;
 };
 
 type TipoRequestParamsPet = {
