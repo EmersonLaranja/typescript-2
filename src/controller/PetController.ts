@@ -35,8 +35,15 @@ export default class PetController {
   async listaPet(req: Request<TipoRequestParamsPet, {}, TipoRequestBodyPet>,
     res: Response<TipoResponseBodyPet>) {
     const listaDePets = await this.repository.listaPet();
-
-    return res.status(200).json({ dados: listaDePets });
+    const dados = listaDePets.map((pet) => {
+      return {
+        id: pet.id,
+        nome: pet.nome,
+        especie: pet.especie,
+        porte: pet.porte !== null ? pet.porte : undefined,
+      };
+    });
+    return res.status(200).json({ dados });
   }
 
   async atualizaPet(req: Request<TipoRequestParamsPet, {}, TipoRequestBodyPet>,
