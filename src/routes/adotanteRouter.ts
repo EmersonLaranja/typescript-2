@@ -9,10 +9,13 @@ const adotanteRepository = new AdotanteRepository(
 );
 const adotanteController = new AdotanteController(adotanteRepository);
 
-const validateBody: RequestHandler = (req, res, next) =>
+const validateAdotanteBody: RequestHandler = (req, res, next) =>
   middlewareValidadorBodyAdotante(req, res, next);
 
-router.post("/", validateBody, (req, res) =>
+const validateEnderecoBody: RequestHandler = (req, res, next) =>
+  validateEnderecoBody(req, res, next);
+
+router.post("/", validateAdotanteBody, (req, res) =>
   adotanteController.criaAdotante(req, res)
 );
 router.get("/", (req, res) => adotanteController.listaAdotantes(req, res));
@@ -23,7 +26,7 @@ router.delete("/:id", (req, res) =>
   adotanteController.deletaAdotante(req, res)
 );
 
-router.patch("/:id", (req, res) =>
+router.patch("/:id", validateEnderecoBody, (req, res) =>
   adotanteController.atualizaEnderecoAdotante(req, res)
 );
 

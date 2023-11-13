@@ -56,13 +56,12 @@ export default class AdotanteController {
     res: Response<TipoResponseBodyAdotante>
   ) {
     const listaDeAdotantes = await this.repository.listaAdotantes();
-    const data = listaDeAdotantes.map((adotante) => {
-      return {
-        id: adotante.id,
-        nome: adotante.nome,
-        celular: adotante.celular,
-      };
-    });
+    const data = listaDeAdotantes.map((adotante) => ({
+      id: adotante.id,
+      nome: adotante.nome,
+      celular: adotante.celular,
+      endereco: adotante.endereco !== null ? adotante.endereco : undefined,
+    }));
     return res.json({ data });
   }
 
@@ -83,14 +82,14 @@ export default class AdotanteController {
   }
 
   async atualizaEnderecoAdotante(
-    req: Request<TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante>,
+    req: Request<TipoRequestParamsAdotante, {}, EnderecoEntity>,
     res: Response<TipoResponseBodyAdotante>
   ) {
     const { id } = req.params;
 
     const { success, message } = await this.repository.atualizaEnderecoAdotante(
       Number(id),
-      req.body.endereco as EnderecoEntity
+      req.body
     );
 
     if (!success) {
