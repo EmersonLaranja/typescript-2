@@ -1,6 +1,7 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 import { AppDataSource } from "../config/dataSource";
 import AdotanteController from "../controller/AdotanteController";
+import { middlewareValidadorBodyAdotante } from "../middleware/validadores/adotanteRequestBody";
 import AdotanteRepository from "../repositories/AdotanteRepository";
 const router = express.Router();
 const adotanteRepository = new AdotanteRepository(
@@ -8,8 +9,12 @@ const adotanteRepository = new AdotanteRepository(
 );
 const adotanteController = new AdotanteController(adotanteRepository);
 
-router.post("/", (req, res) => adotanteController.criaAdotante(req, res));
+const validateBody: RequestHandler = (req, res, next) =>
+  middlewareValidadorBodyAdotante(req, res, next);
 
+router.post("/", validateBody, (req, res) =>
+  adotanteController.criaAdotante(req, res)
+);
 router.get("/", (req, res) => adotanteController.listaAdotantes(req, res));
 
 router.put("/:id", (req, res) => adotanteController.atualizaAdotante(req, res));
