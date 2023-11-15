@@ -8,6 +8,7 @@ import type {
   TipoRequestParamsAdotante,
   TipoResponseBodyAdotante,
 } from "../tipos/tiposAdotante";
+import { EnumHttpStatusCode } from "../enum/EnumHttpStatusCode";
 
 export default class AdotanteController {
   constructor(private repository: AdotanteRepository) { }
@@ -30,7 +31,7 @@ export default class AdotanteController {
 
     await this.repository.criaAdotante(novoAdotante);
     return res
-      .status(201)
+      .status(EnumHttpStatusCode.CREATED)
       .json({ dados: { id: novoAdotante.id, nome, celular } });
   }
   async atualizaAdotante(
@@ -38,16 +39,14 @@ export default class AdotanteController {
     res: Response<TipoResponseBodyAdotante>
   ) {
     const { id } = req.params;
-    const { success, message } = await this.repository.atualizaAdotante(
+    await this.repository.atualizaAdotante(
       Number(id),
       req.body as AdotanteEntity
     );
 
-    if (!success) {
-      return res.status(404).json({ erros: { mensagem: message } });
-    }
 
-    return res.sendStatus(204);
+
+    return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
   }
 
   async listaAdotantes(
@@ -70,14 +69,12 @@ export default class AdotanteController {
   ) {
     const { id } = req.params;
 
-    const { success, message } = await this.repository.deletaAdotante(
+    await this.repository.deletaAdotante(
       Number(id)
     );
 
-    if (!success) {
-      return res.status(404).json({ erros: { mensagem: message } });
-    }
-    return res.sendStatus(204);
+
+    return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
   }
 
   async atualizaEnderecoAdotante(
@@ -86,14 +83,12 @@ export default class AdotanteController {
   ) {
     const { id } = req.params;
 
-    const { success, message } = await this.repository.atualizaEnderecoAdotante(
+    await this.repository.atualizaEnderecoAdotante(
       Number(id),
       req.body
     );
 
-    if (!success) {
-      return res.status(404).json({ erros: { mensagem: message } });
-    }
-    return res.sendStatus(204);
+
+    return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
   }
 }
